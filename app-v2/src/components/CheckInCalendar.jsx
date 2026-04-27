@@ -497,11 +497,11 @@ function buildScheduleMap(books, daysLeft, settings, todayCheckIns = [], todayEn
     .sort((a, b) => a.sort_order - b.sort_order)
 
   const zhMinutes = zhBooks.reduce((s, b) => {
-    const rem = startOfDayRemaining(b, todayReadMap)
+    const rem = b.total_pages - b.current_page
     return s + rem * minutesPerPage(b, settings)
   }, 0)
   const enMinutes = enBooks.reduce((s, b) => {
-    const rem = startOfDayRemaining(b, todayReadMap)
+    const rem = b.total_pages - b.current_page
     return s + rem * minutesPerPage(b, settings)
   }, 0)
   const totalMinutes = zhMinutes + enMinutes
@@ -520,10 +520,10 @@ function buildScheduleMap(books, daysLeft, settings, todayCheckIns = [], todayEn
   const addTrack = (trackBooks, wdMinTrack, weMinTrack) => {
     if (wdMinTrack <= 0 && weMinTrack <= 0) return
     const queue = trackBooks
-      .filter(b => startOfDayRemaining(b, todayReadMap) > 0)
+      .filter(b => (b.total_pages - b.current_page) > 0)
       .map(b => ({
         ...b,
-        remaining: startOfDayRemaining(b, todayReadMap),
+        remaining: b.total_pages - b.current_page,
         mpp: minutesPerPage(b, settings),
       }))
 
